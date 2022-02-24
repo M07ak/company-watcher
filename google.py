@@ -5,7 +5,10 @@ import urllib.parse
 
 GOOGLE_NEWS_MAX_SIZE = 12
 
-# https://github.com/9b/google-alerts
+# Increase to avoid Google detecting as bot
+WAIT_OFFSET_DELAY = 5
+
+
 use_cache = False
 
 global ga
@@ -34,7 +37,7 @@ class Term:
 def random_wait():
     """Wait for a random type to avoid being detected as bot by Google
     """
-    time.sleep(random.random()*10+3)
+    time.sleep(random.random()*10+WAIT_OFFSET_DELAY)
 
 def geneate_google_news_search_urls(keywords, time_range="7d", lang="fr"):
     """Generate a plain Google Alert url for a batch of keyword.

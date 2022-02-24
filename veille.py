@@ -68,13 +68,13 @@ notion.notion_clear_page(NOTION_OUTPUT_RSS_PAGE_ID)
 notion_blocks_to_add_to_page = []
 
 # Create notion title
-notion_blocks_to_add_to_page.append(notion_create_title_object("Feeder config", 1))
+notion_blocks_to_add_to_page.append(notion.notion_create_title_object("Feeder config", 1))
 
 # Add link for feeder config file to Notion page
-link_object = notion.notion_create_link_object(url=gist_url, text="feeder.opml")
+notion_blocks_to_add_to_page.append(notion.notion_create_links_paragraph([notion.notion_create_link_object(url=gist_url, text="feeder.opml")]))
 
 # Add notion title
-notion_blocks_to_add_to_page.append(notion_create_title_object("Flux RSS", 1))
+notion_blocks_to_add_to_page.append(notion.notion_create_title_object("Flux RSS", 1))
 
 rss_links_to_add = []
 
@@ -83,11 +83,14 @@ for term in terms_to_track:
     rss_links_to_add.append(notion.notion_create_text_paragraph(term.rss_url))
 
 # Add links to Notion
-notion_blocks_to_add_to_page(rss_links_to_add)
+notion_blocks_to_add_to_page += rss_links_to_add
+
+notion.notion_add_blocks(NOTION_OUTPUT_RSS_PAGE_ID, notion_blocks_to_add_to_page)
 
 
-"""Notion watching dashboard"""
-notion.notion_clear_page(NOTION_OUTPUT_DASHBOARD_PAGE_ID)
+
+"""Notion Google News watching dashboard"""
+notion.notion_clear_page(NOTION_OUTPUT_GOOGLE_NEWS_DASHBOARD_PAGE_ID)
 
 columns = []
 

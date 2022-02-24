@@ -7,10 +7,6 @@ from collections import defaultdict
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
-RESULT_PAGE_ID = '2e460096-38d6-4db9-86ed-df87ac427d89'
-RSS_PAGE_ID = '6d486d44-db90-426c-9936-f4f294fe0195'
-
-
 # Prepare login info
 global headers
 headers = CaseInsensitiveDict()
@@ -44,7 +40,6 @@ def get_companies_names_to_track_from_notion_database(page_id):
             }
         ]
     }
-
     resp = requests.post(url, headers=headers, json=data)
     companies_names_by_categories = defaultdict(list)
     top_companies_names_by_categories = defaultdict(list)
@@ -93,7 +88,12 @@ def notion_add_blocks(parent_block_id, blocks):
     data = {
         "children": blocks
     }
+
+    pprint.pprint(blocks)
+
     result = requests.patch(url, headers=headers, json=data)
+
+    print(result.json())
 
 
 def notion_create_title_object(title, level=1, random_color=False):
