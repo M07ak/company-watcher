@@ -1,6 +1,10 @@
 from google_alerts import GoogleAlerts
 import os, pprint, time, random
 
+import urllib.parse
+
+GOOGLE_NEWS_MAX_SIZE = 12
+
 # https://github.com/9b/google-alerts
 use_cache = False
 
@@ -27,6 +31,28 @@ class Term:
 
 def random_wait():
     time.sleep(random.random()*10+3)
+
+def geneate_google_news_search_urls(keywords, time_range="7d", lang="fr"):
+    urls = []
+
+    parsed_keywords = []
+    for i in range(len(keywords)):
+        parsed_keywords.append(f'"{keywords[i]}"')
+        if len(parsed_keywords) == GOOGLE_NEWS_MAX_SIZE:
+            plain_keywords = ' OR '.join(
+                parsed_keywords) + " when:" + time_range
+            params = urllib.parse.quote_plus(f"{plain_keywords}")
+            url = f"https://news.google.com/search?q={params}"
+            urls.append(url)
+            parsed_keywords = []
+
+    if len(parsed_keywords) > 0:
+        plain_keywords = ' OR '.join(parsed_keywords) + " when:" + time_range
+        params = urllib.parse.quote_plus(f"{plain_keywords}")
+        url = f"https://news.google.com/search?q={params}"
+        urls.append(url)
+
+    return urls
 
 def get_google_alert_conn():
     global ga
