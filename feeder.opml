@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.1">
+  <head>
+    <title>
+      Veille
+    </title>
+  </head>
+  <body>
+    <outline title="Startup Cyber ++" text="Startup Cyber ++">
+      <outline title="CybelAngel" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/11747906367704877454"/>
+      <outline title="Prohacktive" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/14848027682480019940"/>
+      <outline title="Oxyde Technologies" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/16428586688237363165"/>
+      <outline title="Lorcyber" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/3624635143635400702"/>
+      <outline title="Cyberwatch" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/8368674557523487752"/>
+      <outline title="Patrowl" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/12486528587475728905"/>
+    </outline>    <outline title="Copains" text="Copains">
+      <outline title="Kapsera" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/3624635143635402592"/>
+      <outline title="BZHunt" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/8368674557523485176"/>
+      <outline title="Octobot" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/12486528587475728640"/>
+      <outline title="TEKALIS" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/375101926973700177"/>
+      <outline title="Copeeks" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/8368674557523487748"/>
+    </outline>    <outline title="Cyber" text="Cyber">
+      <outline title="V6Protect" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/12631719353789678282"/>
+      <outline title="Gatewatcher" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/375101926973699766"/>
+      <outline title="Anozr Way" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2635701781011723514"/>
+      <outline title="Onyphe" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/12631719353789678807"/>
+      <outline title="Hackuity" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/778262235199958537"/>
+      <outline title="Cryptosense" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2002347166725584332"/>
+      <outline title="Harfanglab" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/5957577106092177030"/>
+      <outline title="Mail in black" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2114311877637080586"/>
+      <outline title="Trust soft" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2002347166725586650"/>
+      <outline title="Tehtris" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/5957577106092176896"/>
+      <outline title="Egerie" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2114311877637081931"/>
+      <outline title="efficient IP" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2002347166725584714"/>
+      <outline title="Ubble" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/758857197435464097"/>
+      <outline title="Git guardian" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/8561814911887336077"/>
+      <outline title="Dusk Mobile" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/14409959158820120156"/>
+      <outline title="Datadome" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/758857197435464019"/>
+      <outline title="Didomi" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/8561814911887338601"/>
+      <outline title="Quarkslab" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/14409959158820122227"/>
+      <outline title="Crowdsec" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/2828934647838347174"/>
+      <outline title="Trustpair" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/10045616833558078272"/>
+      <outline title="Sekoia" type="rss" xmlUrl="https://google.com/alerts/feeds/16312343590097909905/3216201716792691934"/>
+    </outline>
+  </body>
+</opml>
