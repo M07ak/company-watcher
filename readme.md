@@ -36,7 +36,7 @@ Replace placeholder with your values
 * A Notion API Token with permissions on the following Notion pages. See [Notion documentation](https://www.notion.so/help/create-integrations-with-the-notion-api)
 
 &nbsp;&nbsp;&nbsp;**NOTION_SOURCE_DATABASE_PAGE_ID**
-* A Notion database ID based on the following example: [Example](https://www.notion.so/955080b4b95145018382a126aa07170a?v=a6f605b486f74d189991829607766640)
+* A Notion database ID based on the following example: [Example](https://sustaining-sweater-edb.notion.site/955080b4b95145018382a126aa07170a)
 
 &nbsp;&nbsp;&nbsp;**NOTION_OUTPUT_GOOGLE_NEWS_DASHBOARD_PAGE_ID**
 * A Notion **void** page id. This page will be used to generate a Dashboard to quickly browse Google News
