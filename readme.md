@@ -1,5 +1,5 @@
 
-# Free Competitor Alert
+# Competitor Alerter
 A free competitor RSS and Alert based on Notion and Google alerts
 Generate a Feeder RSS config file, sorted by categories to watch your competitors news
 
