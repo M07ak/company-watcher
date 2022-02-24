@@ -41,7 +41,7 @@ Replace placeholder with your values
 &nbsp;&nbsp;&nbsp;**NOTION_OUTPUT_GOOGLE_NEWS_DASHBOARD_PAGE_ID**
 * A Notion **void** page id. This page will be used to generate a Dashboard to quickly browse Google News
 * **This page will be overwritten each time the program will be run**
-* Example of dashboard generate on the previous source example [Dashboard](https://sustaining-sweater-edb.notion.site/Google-News-Dashboard-example-bb8e080bcdaf420499662fbc6a2d4c77)
+* Example of dashboard generated with the previously defined source example [Dashboard](https://sustaining-sweater-edb.notion.site/Google-News-Dashboard-example-bb8e080bcdaf420499662fbc6a2d4c77)
 * To find a page id, you can use the simple cli in this projet, with your **NOTION_TOKEN** in env:
     ```
     python search_notion_page_id.py  --search "The page name"
@@ -50,7 +50,7 @@ Replace placeholder with your values
 &nbsp;&nbsp;&nbsp;**NOTION_OUTPUT_RSS_PAGE_ID**
 * A Notion **void** page id. This page will be used to generate a Dashboard to export Feeder config or get raw RSS urls
 * **This page will be overwritten each time the program will be run**
-* Example of dashboard generate on the previous source example [Dashboard](https://sustaining-sweater-edb.notion.site/Rss-Feed-Dashboard-example-d33dc4d340e64f48a3465db1ca6ba8c4)
+* Example of dashboard generated with the previously defined source example [Dashboard](https://sustaining-sweater-edb.notion.site/Rss-Feed-Dashboard-example-d33dc4d340e64f48a3465db1ca6ba8c4)
 * To find a page id, you can use the simple cli in this projet, with your **NOTION_TOKEN** in env:
     ```
     python search_notion_page_id.py  --search "The page name"
