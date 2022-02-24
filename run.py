@@ -20,8 +20,7 @@ FEEDER_GIST_ID=os.getenv("FEEDER_GIST_ID")
 # Get companies names from Notion source database
 companies_names_by_categories, top_companies_names_by_categories = notion.get_companies_names_to_track_from_notion_database(NOTION_SOURCE_DATABASE_PAGE_ID)
 
-
-"""Google Alerts"""
+# """Google Alerts"""
 
 # Generate Googles Alerts from companies names
 

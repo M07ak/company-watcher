@@ -17,6 +17,22 @@ headers["Notion-Version"] = "2021-08-16"
 titles_colors = ["blue", "pink", "orange", "green", "purple", "yellow", "red", "brown", "blue", "pink", "orange", "green", "purple", "yellow", "red", "brown"]
 
 
+def search_page_id(term):
+    # Search for a page
+    url = f"https://api.notion.com/v1/search"
+
+    data = {
+        "query": term,
+        "sort": {
+            "direction": "descending",
+            "timestamp": "last_edited_time"
+        }
+    }
+
+    resp = requests.post(url, headers=headers, json=data)
+
+    return resp.json()
+
 def get_companies_names_to_track_from_notion_database(page_id):
     """Get a list of companies names, with corresponding categories from Notion source "Veille" database page
 
