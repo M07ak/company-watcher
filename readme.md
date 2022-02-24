@@ -12,11 +12,11 @@ Google Alerts RSS urls are collected and merge in a ready to use Feeder config f
 ## Screenshots
 <!-- ![Notion source DB](https://i.imgur.com/D3FCGhU.png "Notion source DB") -->
 <p align="center">
-  <img src="https://i.imgur.com/D3FCGhU.png" alt="Notion source DB" height="50"/>
-    <img src="https://i.imgur.com/obgBluo.png" alt="Google News Dashboard" height="50"/>
-    <img src="https://i.imgur.com/eBUnsEF.png" alt="RSS Generator Dashboard" height="50"/>
-    <img src="https://i.imgur.com/FTLBStR.png" alt="Feeder Screen 1" height="50"/>
-    <img src="https://i.imgur.com/BitlBex.png" alt="Feeder Screen 2" height="50"/>
+  <img src="https://i.imgur.com/D3FCGhU.png" alt="Notion source DB" height="100"/>
+    <img src="https://i.imgur.com/obgBluo.png" alt="Google News Dashboard" height="100"/>
+    <img src="https://i.imgur.com/eBUnsEF.png" alt="RSS Generator Dashboard" height="100"/>
+    <img src="https://i.imgur.com/FTLBStR.png" alt="Feeder Screen 1" height="100"/>
+    <img src="https://i.imgur.com/BitlBex.png" alt="Feeder Screen 2" height="100"/>
 </p>
 
 
