@@ -21,6 +21,7 @@ Google Alerts RSS urls are collected and merge in a ready to use Feeder config f
 
 
 ## Quick start
+Init a seed session based on *Google Alerts* readme 
 ```
 $ docker pull  m07ak/company-watcher:latest
 $ docker run --env-file ./.env m07ak/company-watcher:latest
