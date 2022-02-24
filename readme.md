@@ -1,16 +1,40 @@
 
-# Installation
+# Free Competitor Alert
+A free competitor RSS and Alert based on Notion and Google alerts
+Generate a Feeder RSS config file, sorted by categories to watch your competitors news
+
+NOTION-DATABASE <-> Google Alerts <-> RSS App
+
+A Notion database is used as  a source of companies and keywords names to watch for
+Names and keywords are automatically synced with Google alerts RSS generator
+Google Alerts RSS urls are collected and merge in a ready to use Feeder config file
+
+## Screenshots
+<!-- ![Notion source DB](https://i.imgur.com/D3FCGhU.png "Notion source DB") -->
+<img src="https://i.imgur.com/D3FCGhU.png" alt="Notion source DB" style="height: 250px; width:708.24px;"/>
+<img src="https://i.imgur.com/obgBluo.png" alt="Google News Dashboard" style="height: 250px; width:527.94px;"/>
+<img src="https://i.imgur.com/eBUnsEF.png" alt="RSS Generator Dashboard" style="height: 250px; width:527.94px;"/>
+<img src="https://i.imgur.com/FTLBStR.png" alt="Feeder Screen 1" style="height: 250px; width:115.35px;"/>
+<img src="https://i.imgur.com/BitlBex.png" alt="Feeder Screen 2" style="height: 250px; width:115.35px;"/>
+
+## Quick start
+```
+$ docker pull  m07ak/company-watcher:latest
+$ docker run --env-file ./.env m07ak/company-watcher:latest
+```
+
+## Installation
 ```
 $ git clone --recurse-submodules https://github.com/M07ak/company-watcher.git
 ```
-## On ubuntu
-### Project
+### On ubuntu
+#### Project
 ```
 $ cd company-watcher
 $ apt-get -y install chromium-browser python3-selenium
 $ pip install -r requirements.txt
 ```
-### Google Alerts
+#### Google Alerts
 - In google-alerts submodule
 ```
 $ python setup.py install
@@ -19,21 +43,21 @@ $ python setup.py install
     - Visit https://github.com/M07ak/google-alerts
 
 
-## On VsCode with devcontainer extension
+### On VsCode with devcontainer extension
 - Commands: 
     - Remote-Containers: Rebuild Container
     or
     - Remote-Containers: Reopen in Container
 
-## With docker
+### With docker
 * First config .env variable following instructions
 ```
 $ docker pull  m07ak/company-watcher:latest
 $ docker run --env-file ./.env m07ak/company-watcher:latest
 ```
 
-# Configuration
-## Environment variables
+## Configuration
+### Environment variables
 Copy .env.template into .env and/or .devcontainer/devcontainer.env (if you plan to use Vs Code Devcontainers)
 Replace placeholder with your values
 
@@ -81,11 +105,11 @@ Replace placeholder with your values
 &nbsp;&nbsp;&nbsp;**GOOGLE_ALERT_CONFIG**
 * A local path to save your Google session
 
-# Usage
-## Generate content
+## Usage
+### Generate content
 * Run program to populate Notion pages
 ```
 $ python3 run.py
 ```
-## Rss feeds
+### Rss feeds
 - Export file written in Gist to opml file and import it in Feeder app [Play Store](https://play.google.com/store/apps/details?id=com.nononsenseapps.feeder.play&hl=fr&gl=US)  [F-droid](https://f-droid.org/en/packages/com.nononsenseapps.feeder/)
