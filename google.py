@@ -15,6 +15,8 @@ ga = False
 # ga.create("Copeeks", {'delivery': 'RSS', 'frequency': 'realtime', 'language': 'fr', "region": "FR"})
 
 class Term:
+    """Term Object to track on Google Alerts
+    """
     def __init__(self, name, lang="fr", region="FR", rss_url="", match_type="ALL", is_tracked=False, category="Aucune"):
         self.name = name
         self.lang = lang
@@ -30,10 +32,26 @@ class Term:
             self.tracking_name = f'"{name}"'
 
 def random_wait():
+    """Wait for a random type to avoid being detected as bot by Google
+    """
     time.sleep(random.random()*10+3)
 
 def geneate_google_news_search_urls(keywords, time_range="7d", lang="fr"):
+    """Generate a plain Google Alert url for a batch of keyword.
+    The url can be used by human to quickly check if there is news regarding the list of keyword
+
+    Args:
+        keywords (list): A list of keywords to track on Google alert
+        time_range (str, optional): Time range in Google formar. Defaults to "7d". Example: 7d: 7 days, 1y: 1 year
+        lang (str, optional): The Google alerte lang to filter results. Defaults to "fr".
+
+    Returns:
+        list: A list of urls
+    """
     urls = []
+
+    # Google limits to 12 keywords to track
+    # Generate and URL for a batch of 12 keywords maximum
 
     parsed_keywords = []
     for i in range(len(keywords)):
@@ -55,6 +73,11 @@ def geneate_google_news_search_urls(keywords, time_range="7d", lang="fr"):
     return urls
 
 def get_google_alert_conn():
+    """Connect to Google alert
+
+    Returns:
+        GoogleAlerts: A Google alert connector
+    """
     global ga
     if not ga:
         ga = GoogleAlerts(os.getenv("GOOGLE_EMAIL"), os.getenv("GOOGLE_PASSWORD"))
@@ -65,6 +88,11 @@ def get_google_alert_conn():
     return ga
 
 def get_activ_alerts():
+    """List current tracked terms from Google alerts
+
+    Returns:
+        list: A list of Google alerts items
+    """
     if use_cache:
         print("use cache")
         return [{'monitor_id': '81ffd481a5247748:0eb62326811e39c2:com:fr:FR', 'user_id': '16312343590097909905', 'term': 'Copeeks', 'language': 'fr', 'region': 'FR', 'delivery': 'RSS', 'match_type': 'ALL', 'rss_link': 'https://google.com/alerts/feeds/16312343590097909905/18263642973138901855'}, {'monitor_id': '81ffd481a5247748:6a50637476201382:com:en:US', 'user_id': '16312343590097909905', 'term': 'Environnement', 'language': 'en', 'region': 'US', 'delivery': 'RSS', 'match_type': 'ALL', 'rss_link': 'https://google.com/alerts/feeds/16312343590097909905/16902486936570905814'}, {'monitor_id': '81ffd481a5247748:7596f1dadddfbcc4:com:en:US:L', 'user_id': '16312343590097909905', 'term': 'Test', 'language': 'en', 'region': 'US', 'delivery': 'RSS', 'match_type': 'BEST', 'rss_link': 'https://google.com/alerts/feeds/16312343590097909905/11999839392461670649'}, {'monitor_id': '81ffd481a5247748:9e388fd373542e97:com:fr:FR:R', 'user_id': '16312343590097909905', 'term': 'test2', 'language': 'fr', 'region': 'FR', 'delivery': 'RSS', 'match_type': 'ALL', 'rss_link': 'https://google.com/alerts/feeds/16312343590097909905/7248440765111052270'}]
@@ -74,6 +102,14 @@ def get_activ_alerts():
     return alerts
 
 def track_term(term):
+    """Track a new term on Google alert
+
+    Args:
+        term (Term): A term to track
+
+    Returns:
+        Term: The tracked term
+    """
     if not use_cache:
         # print({"name": term.tracking_name, "settings": {'delivery': 'RSS', 'frequency': 'realtime', 'language': term.lang, "region": term.region, "match_type": term.match_type}})
         # exit()
@@ -87,6 +123,11 @@ def track_term(term):
     return term
 
 def untrack_term(alert):
+    """Untrack a term from Google alert
+
+    Args:
+        alert (dict): Alert dict from GoogleAlerts result
+    """
     if not use_cache:
         get_google_alert_conn().delete(alert["monitor_id"])
         random_wait()
@@ -94,8 +135,16 @@ def untrack_term(alert):
     print(f"Stop tracking {alert['term']} {alert['language']} {alert['region']}")
 
 def track_terms(terms):
+    """Sync a list of terms with Google alerts tracking
+
+    Args:
+        terms (list): A lsit of Term objects
+
+    Returns:
+        list: A lit of Term objects
+    """
     activ_alerts = get_activ_alerts()
-    pprint.pprint(activ_alerts)
+    # Start tracking Term if not already trcked by Google alert
     for term in terms:
         is_tracked = False
         for alert in activ_alerts:
@@ -108,6 +157,7 @@ def track_terms(terms):
         if not is_tracked:
             term = track_term(term)
 
+    # Untrack Term if not in list of Term objects to track
     for alert in activ_alerts:
         delete_required = True
         for term in terms:

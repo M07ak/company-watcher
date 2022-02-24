@@ -22,6 +22,14 @@ titles_colors = ["blue", "pink", "orange", "green", "purple", "yellow", "red", "
 
 
 def get_companies_names_to_track_from_notion_database(page_id):
+    """Get a list of companies names, with corresponding categories from Notion source "Veille" database page
+
+    Args:
+        page_id (string): A Notion page id
+
+    Returns:
+        (dict, dict): Dicts of companies names, by category (top and all) 
+    """
     url = f"https://api.notion.com/v1/databases/{page_id}/query"
 
     data = {
@@ -42,6 +50,7 @@ def get_companies_names_to_track_from_notion_database(page_id):
     top_companies_names_by_categories = defaultdict(list)
 
     for company in resp.json()["results"]:
+        # Extract properties from database item withotu failure
         if company["properties"]["Catégorie"]["select"]:
             category = company["properties"]["Catégorie"]["select"]["name"]
         else:
@@ -59,8 +68,8 @@ def get_companies_names_to_track_from_notion_database(page_id):
             name = company["properties"]["Name"]["title"][0]["plain_text"]
         except:
             continue
-
-        # companies_names.append(name)
+        
+        # Add company as a "top" company if score is high
         if score > 9:
             top_companies_names_by_categories[category].append(name)
 
@@ -70,18 +79,34 @@ def get_companies_names_to_track_from_notion_database(page_id):
 
 
 def notion_add_blocks(parent_block_id, blocks):
+    """Add a block to Notion
+
+    Args:
+        parent_block_id (string): A Notion block id
+        blocks (list): A list of Notion blocks
+    """
     global headers
-    # Current output page blocks
+
+    # Append blocks to Notion page
     url = f"https://api.notion.com/v1/blocks/{parent_block_id}/children"
 
     data = {
         "children": blocks
     }
-
     result = requests.patch(url, headers=headers, json=data)
 
 
 def notion_create_title_object(title, level=1, random_color=False):
+    """Create a Notion title object with annotations
+
+    Args:
+        title (string): A title text
+        level (int, optional): Notion title level. Defaults to 1.
+        random_color (bool, optional): Pop a color from Notion available color. Defaults to False.
+
+    Returns:
+        NotionTitle: A Notion title object
+    """
     if random_color:
         color = titles_colors.pop(0)
     else:
@@ -110,27 +135,17 @@ def notion_create_title_object(title, level=1, random_color=False):
         }
     }
 
-def notion_create_code_object(code):
-    return {
-        "object": "block",
-        "type": "code",
-        "code": {'caption': [],
-           'language': 'xml',
-           'text': [{'annotations': {'bold': False,
-                                     'code': False,
-                                     'color': 'default',
-                                     'italic': False,
-                                     'strikethrough': False,
-                                     'underline': False},
-                     'href': None,
-                     'plain_text': "ee",
-                     'text': {'content': code,
-                              'link': None},
-                     'type': 'text'}]}
-    }
-
-
 def notion_create_links_paragraph(links):
+    """Create a Notion line of links separated by blank spaces
+
+    Args:
+        links (list): A list of Notion links objects
+
+    Returns:
+        NotionParagraph: A Notion paragraph
+    """
+
+    blank_space_number = 3
     blank_space = {
         'annotations': {
             'bold': False,
@@ -149,9 +164,8 @@ def notion_create_links_paragraph(links):
     links_with_blank_space = []
     for link_object in links:
         links_with_blank_space.append(link_object)
-        links_with_blank_space.append(blank_space)
-        links_with_blank_space.append(blank_space)
-        links_with_blank_space.append(blank_space)
+        for i in range(blank_space_number):
+            links_with_blank_space.append(blank_space)
 
     return {
         'paragraph': {'text': links_with_blank_space},
@@ -160,6 +174,14 @@ def notion_create_links_paragraph(links):
 
 
 def notion_create_text_paragraph(text):
+    """Create a Notion simple paragraph
+
+    Args:
+        text (string): A text
+
+    Returns:
+        NotionParagraph: A Notion paragraph
+    """
     return {
         'paragraph': {'text': [
             {
@@ -181,6 +203,15 @@ def notion_create_text_paragraph(text):
     }
 
 def notion_create_link_object(url, text):
+    """Create a Notion link object
+
+    Args:
+        url (string): A link url
+        text (string): A link name
+
+    Returns:
+        NotionLink: A Notion link object
+    """
     return {'annotations': {'bold': False,
                             'code': False,
                             'color': 'default',
@@ -195,6 +226,12 @@ def notion_create_link_object(url, text):
 
 
 def populate_page_with_columns(page_id, columns):
+    """Append columns to a Notion page
+
+    Args:
+        page_id (string): A Notion page id
+        columns (list): A list of Notion Column objects
+    """
     # Create columns
     parsed_columns = []
     for column in columns:
@@ -226,22 +263,21 @@ def populate_page_with_columns(page_id, columns):
 
 
 def notion_clear_page(page_id):
+    """Remove all block from a Notion page
+
+    Args:
+        page_id (string): A Notion page id
+    """
     global headers
 
     url = f"https://api.notion.com/v1/blocks/{page_id}/children"
 
     resp = requests.get(url, headers=headers)
 
-    # pprint.pprint(resp.json()["results"])
-    # exit()
-
     for block in resp.json()["results"]:
-        # pprint.pprint(block)
         url = f"https://api.notion.com/v1/blocks/{block['id']}"
 
         resp = requests.delete(url, headers=headers)
         print(f"Delete {block['type']}")
-    # exit()
-    # pprint.pprint(output_block)
 
 
