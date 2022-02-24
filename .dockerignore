@@ -1,0 +1,6 @@
+.env
+.devcontainer
+env/
+__pycache__
+.gitsecret/keys/random_seed
+!*.secret

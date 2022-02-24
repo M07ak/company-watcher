@@ -34,7 +34,6 @@ for category in companies_names_by_categories:
         tracking_by_category[category].append(new_term)
         terms_to_track.append(new_term)
 
-
 # Create and delete Google Alerts tracking to match terms to track
 terms_to_track = track_terms(terms_to_track)
 

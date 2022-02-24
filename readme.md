@@ -25,6 +25,13 @@ $ python setup.py install
     or
     - Remote-Containers: Reopen in Container
 
+## With docker
+* First config .env variable following instructions
+```
+$ docker pull  m07ak/company-watcher:latest
+$ docker run --env-file ./.env m07ak/company-watcher:latest
+```
+
 # Configuration
 ## Environment variables
 Copy .env.template into .env and/or .devcontainer/devcontainer.env (if you plan to use Vs Code Devcontainers)
