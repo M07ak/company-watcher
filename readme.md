@@ -57,7 +57,7 @@ $ python setup.py install
 * First config .env variable following instructions
 ```
 $ docker pull  m07ak/company-watcher:latest
-$ docker run --env-file ./.env m07ak/company-watcher:latest
+$ docker run --env-file ./.env -v [YOUR_LOCAL_PATH_TO_SEED_CONFIG]:[GOOGLE_ALERT_CONFIG] m07ak/company-watcher:latest
 ```
 
 ## Configuration

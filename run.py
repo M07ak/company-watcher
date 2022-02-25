@@ -95,7 +95,7 @@ notion.notion_add_blocks(NOTION_OUTPUT_RSS_PAGE_ID, notion_blocks_to_add_to_page
 
 
 """Notion Google News watching dashboard"""
-print("Populate Goole News Notion dashboard")
+print("Populate Google News Notion dashboard")
 notion.notion_clear_page(NOTION_OUTPUT_GOOGLE_NEWS_DASHBOARD_PAGE_ID)
 
 columns = []
