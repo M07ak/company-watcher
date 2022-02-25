@@ -13,16 +13,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -y install chromium-browser
 RUN apt-get -y install python3-selenium
 
-# [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
 COPY requirements.txt /tmp/pip-tmp/
-
-RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
-   && rm -rf /tmp/pip-tmp
-
 COPY google-alerts/ /tmp/google-alerts/
 
+RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+   && rm -rf /tmp/pip-tmp && cd /tmp/google-alerts/ && python setup.py install && pip install -r requirements.txt && rm -rf /tmp/google-alerts
 
-RUN cd /tmp/google-alerts/ && python setup.py install
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1

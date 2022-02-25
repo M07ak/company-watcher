@@ -19,7 +19,47 @@ FEEDER_GIST_ID=os.getenv("FEEDER_GIST_ID")
 """Notion source"""
 # Get companies names from Notion source database
 print("List companies from Notion")
-companies_names_by_categories, top_companies_names_by_categories = notion.get_companies_names_to_track_from_notion_database(NOTION_SOURCE_DATABASE_PAGE_ID)
+
+
+companies = notion.get_companies_from_notion_db(NOTION_SOURCE_DATABASE_PAGE_ID)
+
+companies_names_by_categories = defaultdict(list)
+top_companies_names_by_categories = defaultdict(list)
+companies_pages_ids_by_name = {}
+companies_pages_rss_link_by_name = {}
+
+for company in companies:
+    # Extract properties from database item withotu failure
+    if company["properties"]["Catégorie"]["select"]:
+        category = company["properties"]["Catégorie"]["select"]["name"]
+    else:
+        category = "Sans catégorie"
+
+    if not company["properties"]["Google News"]["checkbox"]:
+        continue
+
+    if company["properties"]["Niveau d'intéret"]["number"]:
+        score = company["properties"]["Niveau d'intéret"]["number"]
+    else:
+        score = 0
+
+    try:
+        name = company["properties"]["Name"]["title"][0]["plain_text"]
+        companies_pages_ids_by_name[name] = company["id"]
+    except:
+        continue
+
+    try:
+        rss_url = company["properties"]["rss"]["url"]
+        companies_pages_rss_link_by_name[name] = rss_url
+    except:
+        pass
+
+    # Add company as a "top" company if score is high
+    if score > 9:
+        top_companies_names_by_categories[category].append(name)
+
+    companies_names_by_categories[category].append(name)
 
 for category in companies_names_by_categories:
     print(f"Found {len(companies_names_by_categories[category])} companies with category {category}")
@@ -51,6 +91,18 @@ for term in terms_to_track:
     # Prepare list of RssFeed to export
     feeds_to_add.append(RssFeed(name=term.name, category=term.category, rss_link=term.rss_url))
 
+    # Save rss link into corresponding notion item
+    try:
+        page_id = companies_pages_ids_by_name[term.name]
+
+        if term.name in companies_pages_rss_link_by_name and term.rss_url == companies_pages_rss_link_by_name[term.name]:
+            continue
+        
+        notion.set_company_rss_url(page_id, term.rss_url)
+    except:
+        page_id = False
+
+exit()
 
 """Feeder & RSS"""
 print("Generate RSS links and config file")
