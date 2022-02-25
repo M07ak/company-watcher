@@ -1,6 +1,5 @@
 import requests
 import os
-import pprint
 import urllib.parse
 from requests.structures import CaseInsensitiveDict
 from collections import defaultdict
@@ -105,11 +104,7 @@ def notion_add_blocks(parent_block_id, blocks):
         "children": blocks
     }
 
-    pprint.pprint(blocks)
-
     result = requests.patch(url, headers=headers, json=data)
-
-    print(result.json())
 
 
 def notion_create_title_object(title, level=1, random_color=False):
@@ -294,6 +289,6 @@ def notion_clear_page(page_id):
         url = f"https://api.notion.com/v1/blocks/{block['id']}"
 
         resp = requests.delete(url, headers=headers)
-        print(f"Delete {block['type']}")
+        # print(f"Delete {block['type']}")
 
 

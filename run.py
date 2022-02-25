@@ -18,7 +18,11 @@ FEEDER_GIST_ID=os.getenv("FEEDER_GIST_ID")
 
 """Notion source"""
 # Get companies names from Notion source database
+print("List companies from Notion")
 companies_names_by_categories, top_companies_names_by_categories = notion.get_companies_names_to_track_from_notion_database(NOTION_SOURCE_DATABASE_PAGE_ID)
+
+for category in companies_names_by_categories:
+    print(f"Found {len(companies_names_by_categories[category])} companies with category {category}")
 
 # """Google Alerts"""
 
@@ -35,11 +39,11 @@ for category in companies_names_by_categories:
         terms_to_track.append(new_term)
 
 # Create and delete Google Alerts tracking to match terms to track
+print("Track companies names on Google alerts")
 terms_to_track = track_terms(terms_to_track)
 
 
 """Parsing"""
-
 list_of_rss_notion_links = []
 feeds_to_add = []
 
@@ -49,6 +53,7 @@ for term in terms_to_track:
 
 
 """Feeder & RSS"""
+print("Generate RSS links and config file")
 
 # Export list of RssFeed into Feeder config file
 local_file_path = create_feeder_config_file_from_tracking(feeds_to_add)
@@ -60,6 +65,8 @@ with open(local_file_path, "r") as feeder_config_file:
     gist_url = update_gist_file(gist_id=FEEDER_GIST_ID, filename="config.opml", code=local_file_code, description="A Feeder config file")
 
 # Populate Rss Notion Output page with created file and raw RSS urls
+
+print("Populate RSS Notion dashboard")
 
 notion.notion_clear_page(NOTION_OUTPUT_RSS_PAGE_ID)
 
@@ -88,6 +95,7 @@ notion.notion_add_blocks(NOTION_OUTPUT_RSS_PAGE_ID, notion_blocks_to_add_to_page
 
 
 """Notion Google News watching dashboard"""
+print("Populate Goole News Notion dashboard")
 notion.notion_clear_page(NOTION_OUTPUT_GOOGLE_NEWS_DASHBOARD_PAGE_ID)
 
 columns = []

@@ -1,6 +1,7 @@
 .env
 google-alert-config/config.json
 google-alert-config/session
+google-alert-config
 .devcontainer/devcontainer.env
 env/
 __pycache__

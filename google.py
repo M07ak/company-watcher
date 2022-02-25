@@ -84,6 +84,7 @@ def get_google_alert_conn():
     global ga
     if not ga:
         ga = GoogleAlerts(os.getenv("GOOGLE_EMAIL"), os.getenv("GOOGLE_PASSWORD"))
+        ga.set_log_level("info")
 
         ga.authenticate()
         random_wait()
