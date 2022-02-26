@@ -1,3 +1,4 @@
+from pprint import pprint
 import requests
 import os
 import urllib.parse
@@ -5,6 +6,7 @@ from requests.structures import CaseInsensitiveDict
 from collections import defaultdict
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+NOTION_COLORS = ["blue", "pink", "orange", "green", "purple", "yellow", "red", "brown"]
 
 # Prepare login info
 global headers
@@ -13,7 +15,34 @@ headers["Content-Type"] = "application/json"
 headers["Authorization"] = f"Bearer {NOTION_TOKEN}"
 headers["Notion-Version"] = "2021-08-16"
 
-titles_colors = ["blue", "pink", "orange", "green", "purple", "yellow", "red", "brown", "blue", "pink", "orange", "green", "purple", "yellow", "red", "brown"]
+
+titles_colors = NOTION_COLORS + NOTION_COLORS + NOTION_COLORS
+
+
+
+def set_company_rss_url(page_id, url):
+    properties = {
+        "rss": {"url": url}
+    }
+    print(f"Set RSS url of {page_id} to {url}")
+    notion_update_properties(page_id, properties)
+
+def notion_update_properties(page_id, properties):
+    """Update a Notion page properties
+
+    Args:
+        page_id (string): A notion page id
+        properties (dict): A dict of properties with their values to update
+    """
+    data = {
+        "properties": properties
+    }
+
+    global headers
+
+    url = f"https://api.notion.com/v1/pages/{page_id}"
+
+    requests.patch(url, headers=headers, json=data)
 
 
 def search_page_id(term):
@@ -32,14 +61,69 @@ def search_page_id(term):
 
     return resp.json()
 
-def get_companies_names_to_track_from_notion_database(page_id):
-    """Get a list of companies names, with corresponding categories from Notion source "Veille" database page
+def get_page_content(page_id):
+    global headers
+    url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100"
+
+    result = requests.get(url, headers=headers)
+
+    return result.json()["results"]
+    
+
+def get_rss_news_from_notion_db(page_id, min_publication_date):
+    """Get a list of rss news from Notion db
 
     Args:
         page_id (string): A Notion page id
 
     Returns:
-        (dict, dict): Dicts of companies names, by category (top and all) 
+        list: A list of rss news
+    """
+
+    results = []
+
+    url = f"https://api.notion.com/v1/databases/{page_id}/query"
+
+    data = {
+        "page_size": 25,
+        "filter": {
+            "and": [
+                {
+                    "property": "Date de publication",
+                    "date": {
+                        "on_or_after": min_publication_date.isoformat()
+                    }
+                }
+            ]
+        },
+        "sorts": [
+            {
+                "property": "Date de publication",
+                "direction": "descending"
+            }
+        ]
+    }
+    resp = requests.post(url, headers=headers, json=data)
+    json_resp = resp.json()
+    results += resp.json()["results"]
+
+    while json_resp["next_cursor"]:
+        # Query all data following given cursor
+        data["start_cursor"] = json_resp["next_cursor"]
+        resp = requests.post(url, headers=headers, json=data)
+        json_resp = resp.json()
+        results += resp.json()["results"]
+
+    return results
+
+def get_companies_from_notion_db(page_id):
+    """Get a list of companies from Notion DB
+
+    Args:
+        page_id (string): A Notion page id
+
+    Returns:
+        list: A list of Notion "Company" items
     """
     url = f"https://api.notion.com/v1/databases/{page_id}/query"
 
@@ -56,36 +140,8 @@ def get_companies_names_to_track_from_notion_database(page_id):
         ]
     }
     resp = requests.post(url, headers=headers, json=data)
-    companies_names_by_categories = defaultdict(list)
-    top_companies_names_by_categories = defaultdict(list)
-
-    for company in resp.json()["results"]:
-        # Extract properties from database item withotu failure
-        if company["properties"]["Catégorie"]["select"]:
-            category = company["properties"]["Catégorie"]["select"]["name"]
-        else:
-            category = "Sans catégorie"
-
-        if not company["properties"]["Google News"]["checkbox"]:
-            continue
-
-        if company["properties"]["Niveau d'intéret"]["number"]:
-            score = company["properties"]["Niveau d'intéret"]["number"]
-        else:
-            score = 0
-
-        try:
-            name = company["properties"]["Name"]["title"][0]["plain_text"]
-        except:
-            continue
-        
-        # Add company as a "top" company if score is high
-        if score > 9:
-            top_companies_names_by_categories[category].append(name)
-
-        companies_names_by_categories[category].append(name)
     
-    return companies_names_by_categories, top_companies_names_by_categories
+    return resp.json()["results"]
 
 
 def notion_add_blocks(parent_block_id, blocks):
@@ -105,6 +161,8 @@ def notion_add_blocks(parent_block_id, blocks):
     }
 
     result = requests.patch(url, headers=headers, json=data)
+
+    print(result.json())
 
 
 def notion_create_title_object(title, level=1, random_color=False):
@@ -182,6 +240,107 @@ def notion_create_links_paragraph(links):
         'paragraph': {'text': links_with_blank_space},
         'type': 'paragraph'
     }
+
+def notion_post_rss_item(data):
+    global headers
+    # Current output page blocks
+    url = f"https://api.notion.com/v1/pages"
+    
+    result = requests.post(url, headers=headers, json=data)
+    # print(result.json())
+    print("Notion item created")
+
+def notion_prepare_rss_item(database_id, company_id, tag, title, summary, publication_date, url, source="inconnue"):
+    # publication_date = publication_date.strftime("%Y-%m-%dT%H:%M:%S.%f%Z+01:00")
+    publication_date = publication_date.isoformat()
+    data = {
+        "parent": { "database_id": database_id },
+        'icon': {'emoji': '📰', 'type': 'emoji'},
+        'properties': {
+            'Company': {
+                'relation': [{'id': company_id}],
+                'type': 'relation'
+            },
+            "Source": {
+                "select": {
+                    "name": source
+                }
+            },
+            'Date de publication': {
+                'date': {
+                    'end': None,
+                    'start': publication_date,
+                    'time_zone': None
+                },
+                'type': 'date'
+            },
+            'Résumé': {
+                'rich_text': [{
+                    'annotations': {
+                        'bold': False,
+                        'code': False,
+                        'color': 'default',
+                        'italic': False,
+                        'strikethrough': False,
+                        'underline': False
+                    },
+                    'href': None,
+                    'plain_text': summary,
+                    'text': {
+                        'content': summary,
+                        'link': None
+                    },
+                    'type': 'text'
+                }],
+                'type': 'rich_text'
+            },
+            'Titre': {
+                'title': [{
+                    'annotations': {
+                        'bold': False,
+                        'code': False,
+                        'color': 'default',
+                        'italic': False,
+                        'strikethrough': False,
+                        'underline': False
+                    },
+                    'href': None,
+                    'plain_text': title,
+                    'text': {
+                        'content': title,
+                        'link': None
+                    },
+                    'type': 'text'
+                }],
+                'type': 'title'
+            },
+            'Tag': {
+                'rich_text': [{
+                    'annotations': {
+                        'bold': False,
+                        'code': False,
+                        'color': 'default',
+                        'italic': False,
+                        'strikethrough': False,
+                        'underline': False
+                    },
+                    'href': None,
+                    'plain_text': tag,
+                    'text': {
+                        'content': tag,
+                        'link': None
+                    },
+                    'type': 'text'
+                }],
+                'type': 'rich_text'
+            },
+            'Url': {
+                'type': 'url',
+                'url': url
+            }
+        }
+    }
+    return data
 
 
 def notion_create_text_paragraph(text):
