@@ -23,8 +23,8 @@ Google Alerts RSS urls are collected and merge in a ready to use Feeder config f
 ## Quick start
 Init a seed session based on *Google Alerts* readme 
 ```
-$ docker pull  m07ak/company-watcher:latest
-$ docker run --env-file ./.env -v [YOUR_LOCAL_PATH_TO_SEED_CONFIG]:[GOOGLE_ALERT_CONFIG] m07ak/company-watcher:latest
+$ docker pull  m07ak/main-company-watcher:latest
+$ docker run --env-file ./.env -v [YOUR_LOCAL_PATH_TO_SEED_CONFIG]:[GOOGLE_ALERT_CONFIG] m07ak/main-company-watcher:latest
 ```
 
 ## Installation
@@ -56,8 +56,8 @@ $ python setup.py install
 ### With docker
 * First config .env variable following instructions
 ```
-$ docker pull  m07ak/company-watcher:latest
-$ docker run --env-file ./.env -v [YOUR_LOCAL_PATH_TO_SEED_CONFIG]:[GOOGLE_ALERT_CONFIG] m07ak/company-watcher:latest
+$ docker pull  m07ak/main-company-watcher:latest
+$ docker run --env-file ./.env -v [YOUR_LOCAL_PATH_TO_SEED_CONFIG]:[GOOGLE_ALERT_CONFIG] m07ak/main-company-watcher:latest
 ```
 
 ## Configuration
@@ -117,3 +117,10 @@ $ python3 run.py
 ```
 ### Rss feeds
 - Export file written in Gist to opml file and import it in Feeder app [Play Store](https://play.google.com/store/apps/details?id=com.nononsenseapps.feeder.play&hl=fr&gl=US)  [F-droid](https://f-droid.org/en/packages/com.nononsenseapps.feeder/)
+
+## Build
+```
+docker build . --file=dockerfiles/news-feeding-dockerfile -t m07ak/news-feeder-company-watcher:latest
+docker build . --file=dockerfiles/main-dockerfile -t m07ak/main-company-watcher:latest
+
+```

@@ -1,0 +1,12 @@
+FROM python:3.10-bullseye
+
+COPY requirements/news-requirements.txt /tmp/pip-tmp/requirements.txt
+
+RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt && rm -rf /tmp/pip-tmp
+
+WORKDIR /app
+
+copy *.py /app/
+
+# CMD sleep infinity
+CMD python -u parse_rss_news.py

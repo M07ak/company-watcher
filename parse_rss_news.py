@@ -38,7 +38,7 @@ for company in companies:
     except:
         continue
     
-    print(f"Found {len(news_feed.entries)} for {name}")
+    print(f"Found {len(news_feed.entries)} news for {name}")
     
     news_to_add = []
 

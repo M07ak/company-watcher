@@ -43,9 +43,18 @@ for company in companies:
     else:
         score = 0
 
+
+    forced_search_term = False
+    if company["properties"]["search_term"]["rich_text"]:
+        forced_search_term = company["properties"]["search_term"]["rich_text"][0]["plain_text"]
+
     try:
-        name = company["properties"]["Name"]["title"][0]["plain_text"]
-        companies_pages_ids_by_name[name] = company["id"]
+        if forced_search_term:
+            name = forced_search_term
+            companies_pages_ids_by_name[forced_search_term] = company["id"]
+        else:
+            name = company["properties"]["Name"]["title"][0]["plain_text"]
+            companies_pages_ids_by_name[name] = company["id"]
     except:
         continue
 
@@ -60,6 +69,7 @@ for company in companies:
         top_companies_names_by_categories[category].append(name)
 
     companies_names_by_categories[category].append(name)
+
 
 for category in companies_names_by_categories:
     print(f"Found {len(companies_names_by_categories[category])} companies with category {category}")
@@ -101,8 +111,6 @@ for term in terms_to_track:
         notion.set_company_rss_url(page_id, term.rss_url)
     except:
         page_id = False
-
-exit()
 
 """Feeder & RSS"""
 print("Generate RSS links and config file")

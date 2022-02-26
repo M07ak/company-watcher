@@ -20,7 +20,7 @@ ga = False
 class Term:
     """Term Object to track on Google Alerts
     """
-    def __init__(self, name, lang="fr", region="FR", rss_url="", match_type="ALL", is_tracked=False, category="Aucune"):
+    def __init__(self, name, lang="fr", region="FR", rss_url="", match_type="BEST", is_tracked=False, category="Aucune"):
         self.name = name
         self.lang = lang
         self.region = region
@@ -117,7 +117,7 @@ def track_term(term):
     if not use_cache:
         # print({"name": term.tracking_name, "settings": {'delivery': 'RSS', 'frequency': 'realtime', 'language': term.lang, "region": term.region, "match_type": term.match_type}})
         # exit()
-        response = get_google_alert_conn().create(term.tracking_name, {'delivery': 'RSS', 'frequency': 'realtime', 'language': term.lang, "region": term.region, "match_type": term.match_type})
+        response = get_google_alert_conn().create(term.tracking_name, {'delivery': 'RSS', 'frequency': 'realtime', 'language': term.lang, "region": term.region, "monitor_match": term.match_type})
         random_wait()
     
     term.rss_url = response[0]['rss_link']
