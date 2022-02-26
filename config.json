@@ -1,0 +1,20 @@
+{
+    "notion": {
+        "source_database": {
+            "name": "Entreprises à suivre",
+            "activated": true
+        },
+        "google_news_dashboard": {
+            "name": "Dashboard Google news",
+            "activated": true
+        },
+        "rss_feed_config_dashboard": {
+            "name": "Flux RSS",
+            "activated": true
+        },
+        "news_database": {
+            "name": "Actualités des entreprises",
+            "activated": true
+        }
+    }
+}
