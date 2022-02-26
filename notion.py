@@ -6,6 +6,7 @@ from requests.structures import CaseInsensitiveDict
 from collections import defaultdict
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+NOTION_COLORS = ["blue", "pink", "orange", "green", "purple", "yellow", "red", "brown"]
 
 # Prepare login info
 global headers
@@ -14,7 +15,10 @@ headers["Content-Type"] = "application/json"
 headers["Authorization"] = f"Bearer {NOTION_TOKEN}"
 headers["Notion-Version"] = "2021-08-16"
 
-titles_colors = ["blue", "pink", "orange", "green", "purple", "yellow", "red", "brown", "blue", "pink", "orange", "green", "purple", "yellow", "red", "brown"]
+
+titles_colors = NOTION_COLORS + NOTION_COLORS + NOTION_COLORS
+
+
 
 def set_company_rss_url(page_id, url):
     properties = {
@@ -66,7 +70,7 @@ def get_page_content(page_id):
     return result.json()["results"]
     
 
-def get_rss_news_from_notion_db(page_id):
+def get_rss_news_from_notion_db(page_id, min_publication_date):
     """Get a list of rss news from Notion db
 
     Args:
@@ -75,11 +79,21 @@ def get_rss_news_from_notion_db(page_id):
     Returns:
         list: A list of rss news
     """
+
+    results = []
+
     url = f"https://api.notion.com/v1/databases/{page_id}/query"
 
     data = {
+        "page_size": 25,
         "filter": {
-            "or": [
+            "and": [
+                {
+                    "property": "Date de publication",
+                    "date": {
+                        "on_or_after": min_publication_date.isoformat()
+                    }
+                }
             ]
         },
         "sorts": [
@@ -90,8 +104,17 @@ def get_rss_news_from_notion_db(page_id):
         ]
     }
     resp = requests.post(url, headers=headers, json=data)
-    
-    return resp.json()["results"]
+    json_resp = resp.json()
+    results += resp.json()["results"]
+
+    while json_resp["next_cursor"]:
+        # Query all data following given cursor
+        data["start_cursor"] = json_resp["next_cursor"]
+        resp = requests.post(url, headers=headers, json=data)
+        json_resp = resp.json()
+        results += resp.json()["results"]
+
+    return results
 
 def get_companies_from_notion_db(page_id):
     """Get a list of companies from Notion DB
@@ -218,12 +241,31 @@ def notion_create_links_paragraph(links):
         'type': 'paragraph'
     }
 
-def notion_create_rss_item(database_id, tag, title, summary, publication_date, url):
+def notion_post_rss_item(data):
+    global headers
+    # Current output page blocks
+    url = f"https://api.notion.com/v1/pages"
+    
+    result = requests.post(url, headers=headers, json=data)
+    # print(result.json())
+    print("Notion item created")
+
+def notion_prepare_rss_item(database_id, company_id, tag, title, summary, publication_date, url, source="inconnue"):
     # publication_date = publication_date.strftime("%Y-%m-%dT%H:%M:%S.%f%Z+01:00")
     publication_date = publication_date.isoformat()
     data = {
         "parent": { "database_id": database_id },
+        'icon': {'emoji': '📰', 'type': 'emoji'},
         'properties': {
+            'Company': {
+                'relation': [{'id': company_id}],
+                'type': 'relation'
+            },
+            "Source": {
+                "select": {
+                    "name": source
+                }
+            },
             'Date de publication': {
                 'date': {
                     'end': None,
@@ -298,14 +340,8 @@ def notion_create_rss_item(database_id, tag, title, summary, publication_date, u
             }
         }
     }
-    
-    global headers
-    # Current output page blocks
-    url = f"https://api.notion.com/v1/pages"
+    return data
 
-    result = requests.post(url, headers=headers, json=data)
-    
-    print(result.json())
 
 def notion_create_text_paragraph(text):
     """Create a Notion simple paragraph
